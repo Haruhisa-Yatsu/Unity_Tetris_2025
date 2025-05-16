@@ -33,8 +33,8 @@ public class Mino : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _posX = 4;
-        _posY = 19;
+        _posX = Field.WIDTH / 2;
+        _posY = Field.HEIGHT - 1;
 
         _fallCount = 0.0f;
 
@@ -55,8 +55,6 @@ public class Mino : MonoBehaviour
             Left();
         }
 
-
-
         _fallCount += Time.deltaTime;
 
         if (_fallCount > _fallSecond)
@@ -71,6 +69,13 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void Fall()
     {
+        if (CheckBlock(_posX, _posY - 1))
+        {
+            // TODO:着地処理
+
+            return;
+        }
+
         _posY -= 1;
         PositionUpdate();
     }
@@ -80,6 +85,11 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void Right()
     {
+        if (CheckBlock(_posX + 1, _posY))
+        {
+            return;
+        }
+
         _posX += 1;
         PositionUpdate();
     }
@@ -89,8 +99,42 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void Left()
     {
+        if (CheckBlock(_posX - 1, _posY))
+        {
+            return;
+        }
+
         _posX -= 1;
         PositionUpdate();
+    }
+
+    /// <summary>
+    /// 指定した座標にブロックがあるか
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckBlock(int x, int y)
+    {
+        // 左壁の判定
+        if (x < 0)
+        {
+            return true;
+        }
+
+        // 右壁の判定
+        if (x >= Field.WIDTH)
+        {
+            return true;
+        }
+
+        // 底の判定
+        if (y < 0)
+        {
+            return true;
+        }
+
+        // TODO:盤面のブロックとの判定
+
+        return false;
     }
 
     /// <summary>
