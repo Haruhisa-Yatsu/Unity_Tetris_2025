@@ -5300,6 +5300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minoPrefab: {fileID: 7053188856445598207, guid: 71f29061f55c8d841a35971772b9635b, type: 3}
+  _fieldBlockPrefab: {fileID: 7222813409129020988, guid: f2a74fb0182ffee44825c17a3db7099a, type: 3}
 --- !u!1 &1325465911
 GameObject:
   m_ObjectHideFlags: 0
