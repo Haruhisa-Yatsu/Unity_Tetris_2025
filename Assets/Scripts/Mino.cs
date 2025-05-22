@@ -30,7 +30,9 @@ public class Mino : MonoBehaviour
     /// </summary>
     private RectTransform _rect;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// 最初の1フレーム目のみ実行される
+    /// </summary>
     void Start()
     {
         _posX = Field.WIDTH / 2;
@@ -43,7 +45,9 @@ public class Mino : MonoBehaviour
         PositionUpdate();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// 毎フレーム実行される
+    /// </summary>
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
