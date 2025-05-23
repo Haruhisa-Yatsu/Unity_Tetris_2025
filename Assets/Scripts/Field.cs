@@ -80,6 +80,19 @@ public class Field : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 指定した行のブロックを削除する
+    /// </summary>
+    /// <param name="y"></param>
+    public void EraceLine(int y)
+    {
+        for(int i = 0; i < WIDTH; i++)
+        {
+            SetFieldBlockEnable(i, y, CheckFieldBlockEnable(i, y + 1));
+        }
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {

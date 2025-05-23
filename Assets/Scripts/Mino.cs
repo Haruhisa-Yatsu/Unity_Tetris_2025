@@ -92,7 +92,6 @@ public class Mino : MonoBehaviour
 
         _fallCount += Time.deltaTime;
 
-
         if (Input.GetKey(KeyCode.DownArrow))
         {
             if (_fallCount > _fastFallSecond)
@@ -110,8 +109,10 @@ public class Mino : MonoBehaviour
             }
         }
 
-        Debug.Log(_field.CheckLine(0));
-
+        if (_field.CheckLine(0))
+        {
+            _field.EraceLine(0);
+        }
     }
 
     /// <summary>
