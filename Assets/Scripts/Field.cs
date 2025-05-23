@@ -36,6 +36,50 @@ public class Field : MonoBehaviour
         _fieldBlockArray[x, y].SetEnable(enable);
     }
 
+    /// <summary>
+    /// 指定したブロックが表示されているかどうか
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public bool CheckFieldBlockEnable(int x, int y)
+    {
+        return _fieldBlockArray[x, y].GetEnable();
+    }
+
+    /// <summary>
+    /// ブロックの着地確認処理
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public bool CheckLanding(int x, int y)
+    {
+        if (y <= 0)
+        {
+            return true;
+        }
+
+        return CheckFieldBlockEnable(x, y - 1);
+    }
+
+    /// <summary>
+    /// 指定した行がすべて埋まっているか
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public bool CheckLine(int y)
+    {
+        for (int i = 0; i < WIDTH; i++)
+        {
+            if (!CheckFieldBlockEnable(i, y))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -26,6 +26,15 @@ public class FieldBlock : MonoBehaviour
     }
 
     /// <summary>
+    /// ブロックが表示されているかどうか
+    /// </summary>
+    /// <returns></returns>
+    public bool GetEnable()
+    {
+        return _image.enabled;
+    }
+
+    /// <summary>
     /// Imageの色を設定する
     /// </summary>
     /// <param name="color"></param>

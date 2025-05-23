@@ -57,14 +57,22 @@ public class Mino : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _posX = Field.WIDTH / 2;
-        _posY = Field.HEIGHT - 1;
+        PositionInit();
 
         _fallCount = 0.0f;
 
         _rect = transform as RectTransform;
 
         PositionUpdate();
+    }
+
+    /// <summary>
+    /// 初期位置にミノを飛ばす
+    /// </summary>
+    private void PositionInit()
+    {
+        _posX = Field.WIDTH / 2;
+        _posY = Field.HEIGHT - 1;
     }
 
     /// <summary>
@@ -102,8 +110,8 @@ public class Mino : MonoBehaviour
             }
         }
 
+        Debug.Log(_field.CheckLine(0));
 
-        _field.SetFieldBlockEnable(_posX, _posY, true);
     }
 
     /// <summary>
@@ -113,7 +121,17 @@ public class Mino : MonoBehaviour
     {
         if (CheckBlock(_posX, _posY - 1))
         {
-            // TODO:着地処理
+            return;
+        }
+
+        if (_field.CheckLanding(_posX, _posY))
+        {
+            _field.SetFieldBlockEnable(_posX, _posY, true);
+
+            //TODO:ライン消去処理
+
+            PositionInit();
+            PositionUpdate();
 
             return;
         }
@@ -167,14 +185,6 @@ public class Mino : MonoBehaviour
         {
             return true;
         }
-
-        // 底の判定
-        if (y < 0)
-        {
-            return true;
-        }
-
-        // TODO:盤面のブロックとの判定
 
         return false;
     }
