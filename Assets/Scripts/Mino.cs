@@ -26,6 +26,12 @@ public class Mino : MonoBehaviour
     private float _fallSecond;
 
     /// <summary>
+    /// çÇë¨óéâ∫ÇÃïbêî
+    /// </summary>
+    [SerializeField]
+    private float _fastFallSecond;
+
+    /// <summary>
     /// 2DópÇÃTransform
     /// </summary>
     private RectTransform _rect;
@@ -70,6 +76,7 @@ public class Mino : MonoBehaviour
         {
             Right();
         }
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             Left();
@@ -77,11 +84,24 @@ public class Mino : MonoBehaviour
 
         _fallCount += Time.deltaTime;
 
-        if (_fallCount > _fallSecond)
+
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            Fall();
-            _fallCount -= _fallSecond;
+            if (_fallCount > _fastFallSecond)
+            {
+                Fall();
+                _fallCount = 0;
+            }
         }
+        else
+        {
+            if (_fallCount > _fallSecond)
+            {
+                Fall();
+                _fallCount -= _fallSecond;
+            }
+        }
+
 
         _field.SetFieldBlockEnable(_posX, _posY, true);
     }

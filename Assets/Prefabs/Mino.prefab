@@ -86,6 +86,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallSecond: 1
+  _fastFallSecond: 0.05
 --- !u!1 &6185324077298491152
 GameObject:
   m_ObjectHideFlags: 0
