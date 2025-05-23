@@ -31,6 +31,22 @@ public class Mino : MonoBehaviour
     private RectTransform _rect;
 
     /// <summary>
+    /// Fieldの参照
+    /// </summary>
+    private Field _field;
+
+    /// <summary>
+    /// Fieldの参照をセットする
+    /// </summary>
+    /// <param name="field"></param>
+    public void SetField(Field field)
+    {
+        _field = field;
+    }
+
+
+
+    /// <summary>
     /// 最初の1フレーム目のみ実行される
     /// </summary>
     void Start()
@@ -66,6 +82,8 @@ public class Mino : MonoBehaviour
             Fall();
             _fallCount -= _fallSecond;
         }
+
+        _field.SetFieldBlockEnable(_posX, _posY, true);
     }
 
     /// <summary>
