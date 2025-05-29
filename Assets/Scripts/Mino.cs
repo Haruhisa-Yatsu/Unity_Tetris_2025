@@ -131,17 +131,6 @@ public class Mino : MonoBehaviour
     private Field _field;
 
     /// <summary>
-    /// Fieldの参照をセットする
-    /// </summary>
-    /// <param name="field"></param>
-    public void SetField(Field field)
-    {
-        _field = field;
-    }
-
-
-
-    /// <summary>
     /// 最初の1フレーム目のみ実行される
     /// </summary>
     void Start()
@@ -156,11 +145,20 @@ public class Mino : MonoBehaviour
     }
 
     /// <summary>
+    /// Fieldの参照をセットする
+    /// </summary>
+    /// <param name="field"></param>
+    public void SetField(Field field)
+    {
+        _field = field;
+    }
+
+    /// <summary>
     /// 初期位置にミノを飛ばす
     /// </summary>
     private void PositionInit()
     {
-        var shapeData = GetShape((MinoType)Random.Range(0,(int)MinoType.MAX));
+        var shapeData = GetShape((MinoType)Random.Range(0, (int)MinoType.MAX));
 
         for (int i = 0; i < 4; i++)
         {
@@ -197,19 +195,6 @@ public class Mino : MonoBehaviour
     /// </summary>
     void Update()
     {
-        var data = GetShape(MinoType.I);
-
-
-        string s = "";
-
-        for (int i = 0; i < 4; i++)
-        {
-            s += $"{data[i, 0]},{data[i, 1]}\n";
-        }
-
-        Debug.Log(s);
-
-
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             Right();
