@@ -86,9 +86,19 @@ public class Field : MonoBehaviour
     /// <param name="y"></param>
     public void EraceLine(int y)
     {
-        for(int i = 0; i < WIDTH; i++)
+        for (int j = y; j < HEIGHT; j++)
         {
-            SetFieldBlockEnable(i, y, CheckFieldBlockEnable(i, y + 1));
+            for (int i = 0; i < WIDTH; i++)
+            {
+                if (j == HEIGHT - 1)
+                {
+                    SetFieldBlockEnable(i, j, false);
+                }
+                else
+                {
+                    SetFieldBlockEnable(i, j, CheckFieldBlockEnable(i, j + 1));
+                }
+            }
         }
     }
 

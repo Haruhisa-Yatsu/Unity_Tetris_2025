@@ -108,11 +108,6 @@ public class Mino : MonoBehaviour
                 _fallCount -= _fallSecond;
             }
         }
-
-        if (_field.CheckLine(0))
-        {
-            _field.EraceLine(0);
-        }
     }
 
     /// <summary>
@@ -129,7 +124,13 @@ public class Mino : MonoBehaviour
         {
             _field.SetFieldBlockEnable(_posX, _posY, true);
 
-            //TODO:ƒ‰ƒCƒ“Á‹ˆ—
+            for (int i = 0; i < Field.HEIGHT; i++)
+            {
+                if (_field.CheckLine(i))
+                {
+                    _field.EraceLine(i);
+                }
+            }
 
             PositionInit();
             PositionUpdate();
