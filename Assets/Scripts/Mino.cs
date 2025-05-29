@@ -4,6 +4,95 @@ using UnityEngine;
 
 public class Mino : MonoBehaviour
 {
+    //θ= 0°の場合
+    //x' = X
+    //y' = Y
+    //
+    //θ= 90°の場合
+    //x' = -Y
+    //y' = X
+    //
+    //θ= 180°の場合
+    //x' = -X
+    //y' = -Y
+    //
+    //θ= 270°の場合
+    //x' = Y
+    //y' = -X
+
+    public enum MinoType
+    {
+        T,
+        I,
+        O,
+        S,
+        Z,
+        J,
+        L,
+
+        MAX
+    }
+
+    public int[,,] _shapeData =
+    {
+        //T の形データ
+        {
+            { 1,0},
+            { 0,0},
+            { -1,0},
+            { 0,1},
+        },
+        //I の形データ
+        {
+            { 0,2},
+            { 0,1},
+            { 0,0},
+            { 0,-1},
+        },
+        //O の形データ
+        {
+            { 0,0},
+            { -1,0},
+            { 0,-1},
+            { -1,-1},
+        },
+        //S の形データ
+        {
+            { 1,1},
+            { 0,1},
+            { 0,0},
+            { -1,0},
+        },
+        //Z の形データ
+        {
+            { -1,1},
+            { 0,1},
+            { 0,0},
+            { 1,0},
+        },
+        //J の形データ
+        {
+            { -1,1},
+            { -1,0},
+            { 0,0},
+            { 1,0},
+        },
+        //L の形データ
+        {
+            { 1,1},
+            { 1,0},
+            { 0,0},
+            { -1,0},
+        },
+    };
+
+    /// <summary>
+    /// BlockRootをUnityEditorから指定する
+    /// </summary>
+    [SerializeField]
+    private RectTransform[] _blockRootArray;
+
+
     /// <summary>
     /// 位置縦
     /// </summary>
@@ -71,8 +160,36 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void PositionInit()
     {
+        var shapeData = GetShape((MinoType)Random.Range(0,(int)MinoType.MAX));
+
+        for (int i = 0; i < 4; i++)
+        {
+            var newPos = new Vector3(shapeData[i, 0], shapeData[i, 1], 0);
+
+            _blockRootArray[i].localPosition = newPos;
+        }
+
+
         _posX = Field.WIDTH / 2;
         _posY = Field.HEIGHT - 1;
+    }
+
+    /// <summary>
+    /// 指定したMinoTypeの形データを取得する。
+    /// </summary>
+    /// <param name="minoType"></param>
+    /// <returns></returns>
+    public int[,] GetShape(MinoType minoType)
+    {
+        int[,] ret = new int[4, 2];
+
+        for (int i = 0; i < 4; i++)
+        {
+            ret[i, 0] = _shapeData[(int)minoType, i, 0];
+            ret[i, 1] = _shapeData[(int)minoType, i, 1];
+        }
+
+        return ret;
     }
 
     /// <summary>
@@ -80,6 +197,19 @@ public class Mino : MonoBehaviour
     /// </summary>
     void Update()
     {
+        var data = GetShape(MinoType.I);
+
+
+        string s = "";
+
+        for (int i = 0; i < 4; i++)
+        {
+            s += $"{data[i, 0]},{data[i, 1]}\n";
+        }
+
+        Debug.Log(s);
+
+
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             Right();
