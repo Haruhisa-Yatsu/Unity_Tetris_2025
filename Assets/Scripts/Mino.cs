@@ -4,21 +4,14 @@ using UnityEngine;
 
 public class Mino : MonoBehaviour
 {
-    //θ= 0°の場合
-    //x' = X
-    //y' = Y
-    //
-    //θ= 90°の場合
-    //x' = -Y
-    //y' = X
-    //
-    //θ= 180°の場合
-    //x' = -X
-    //y' = -Y
-    //
-    //θ= 270°の場合
-    //x' = Y
-    //y' = -X
+
+    public enum RotateAngle
+    {
+        _0,
+        _90,
+        _180,
+        _270,
+    }
 
     public enum MinoType
     {
@@ -92,7 +85,6 @@ public class Mino : MonoBehaviour
     [SerializeField]
     private RectTransform[] _blockRootArray;
 
-
     /// <summary>
     /// 位置縦
     /// </summary>
@@ -131,6 +123,11 @@ public class Mino : MonoBehaviour
     private Field _field;
 
     /// <summary>
+    /// 現在のミノの形
+    /// </summary>
+    private int[,] _currentShapeData;
+
+    /// <summary>
     /// 最初の1フレーム目のみ実行される
     /// </summary>
     void Start()
@@ -142,6 +139,49 @@ public class Mino : MonoBehaviour
         _rect = transform as RectTransform;
 
         PositionUpdate();
+    }
+
+    /// <summary>
+    /// 毎フレーム実行される
+    /// </summary>
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Right();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            Left();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _currentShapeData = ShapeRotate(_currentShapeData,
+                RotateAngle._90);
+            BlockRootUpdate();
+        }
+
+
+        _fallCount += Time.deltaTime;
+
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            if (_fallCount > _fastFallSecond)
+            {
+                Fall();
+                _fallCount = 0;
+            }
+        }
+        else
+        {
+            if (_fallCount > _fallSecond)
+            {
+                Fall();
+                _fallCount -= _fallSecond;
+            }
+        }
     }
 
     /// <summary>
@@ -158,18 +198,25 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void PositionInit()
     {
-        var shapeData = GetShape((MinoType)Random.Range(0, (int)MinoType.MAX));
+        _currentShapeData = GetShape((MinoType)Random.Range(0, (int)MinoType.MAX));
 
-        for (int i = 0; i < 4; i++)
-        {
-            var newPos = new Vector3(shapeData[i, 0], shapeData[i, 1], 0);
-
-            _blockRootArray[i].localPosition = newPos;
-        }
-
+        BlockRootUpdate();
 
         _posX = Field.WIDTH / 2;
         _posY = Field.HEIGHT - 1;
+    }
+
+    /// <summary>
+    /// ブロックルートの座標を更新
+    /// </summary>
+    private void BlockRootUpdate()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            var newPos = new Vector3(_currentShapeData[i, 0], _currentShapeData[i, 1], 0);
+
+            _blockRootArray[i].localPosition = newPos;
+        }
     }
 
     /// <summary>
@@ -191,39 +238,59 @@ public class Mino : MonoBehaviour
     }
 
     /// <summary>
-    /// 毎フレーム実行される
+    /// 与えられたShapeDataをRotateAngle分回転させて返す関数
     /// </summary>
-    void Update()
+    /// <param name="shape"></param>
+    /// <param name="rotateAngle"></param>
+    /// <returns></returns>
+    public int[,] ShapeRotate(int[,] shape, RotateAngle rotateAngle)
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        int[,] ret  = new int[4,2];
+
+        switch (rotateAngle)
         {
-            Right();
+            case RotateAngle._0:
+
+                return shape;
+
+            case RotateAngle._90:
+
+                for(int i = 0; i < 4; i++)
+                {
+                    ret[i, 0] = -shape[i, 1];
+                    ret[i, 1] = shape[i, 0];
+                }
+
+                break;
+
+            case RotateAngle._180:
+
+                for (int i = 0; i < 4; i++)
+                {
+                    ret[i, 0] = -shape[i, 0];
+                    ret[i, 1] = -shape[i, 1];
+                }
+
+                break;
+
+            case RotateAngle._270:
+
+                for (int i = 0; i < 4; i++)
+                {
+                    ret[i, 0] = shape[i, 1];
+                    ret[i, 1] = -shape[i, 0];
+                }
+
+                break;
+
+            default:
+
+                break;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Left();
-        }
-
-        _fallCount += Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            if (_fallCount > _fastFallSecond)
-            {
-                Fall();
-                _fallCount = 0;
-            }
-        }
-        else
-        {
-            if (_fallCount > _fallSecond)
-            {
-                Fall();
-                _fallCount -= _fallSecond;
-            }
-        }
+        return ret;
     }
+
 
     /// <summary>
     /// 落下処理

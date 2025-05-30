@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Field : MonoBehaviour
 {
+    /// <summary>
+    /// 盤面の横幅
+    /// </summary>
     public const int WIDTH = 10;
+
+    /// <summary>
+    /// 盤面の縦幅
+    /// </summary>
     public const int HEIGHT = 20;
 
     /// <summary>
@@ -23,7 +30,6 @@ public class Field : MonoBehaviour
     /// </summary>
     [SerializeField]
     private FieldBlock _fieldBlockPrefab;
-
 
     /// <summary>
     /// 指定した座標のブロックの表示非表示設定
@@ -106,11 +112,6 @@ public class Field : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // ミノの生成処理
-        // Fieldの子として生成する
-        Mino mino = Instantiate(_minoPrefab, transform);
-        mino.SetField(this);
-
         // 盤面の黒部分すべてに
         // _fieldBlockPrefabを敷き詰める処理を記述せよ
 
@@ -138,6 +139,10 @@ public class Field : MonoBehaviour
             }
         }
 
+        // ミノの生成処理
+        // Fieldの子として生成する
+        Mino mino = Instantiate(_minoPrefab, transform);
+        mino.SetField(this);
     }
 
     // Update is called once per frame

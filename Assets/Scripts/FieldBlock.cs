@@ -42,5 +42,4 @@ public class FieldBlock : MonoBehaviour
     {
         _image.color = color;
     }
-
 }
