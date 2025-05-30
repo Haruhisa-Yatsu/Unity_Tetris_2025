@@ -159,6 +159,13 @@ public class Mino : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _currentShapeData = ShapeRotate(_currentShapeData,
+                RotateAngle._270);
+            BlockRootUpdate();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            _currentShapeData = ShapeRotate(_currentShapeData,
                 RotateAngle._90);
             BlockRootUpdate();
         }
@@ -245,7 +252,7 @@ public class Mino : MonoBehaviour
     /// <returns></returns>
     public int[,] ShapeRotate(int[,] shape, RotateAngle rotateAngle)
     {
-        int[,] ret  = new int[4,2];
+        int[,] ret = new int[4, 2];
 
         switch (rotateAngle)
         {
@@ -255,7 +262,7 @@ public class Mino : MonoBehaviour
 
             case RotateAngle._90:
 
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     ret[i, 0] = -shape[i, 1];
                     ret[i, 1] = shape[i, 0];
@@ -302,9 +309,29 @@ public class Mino : MonoBehaviour
             return;
         }
 
-        if (_field.CheckLanding(_posX, _posY))
+        bool landing = false;
+
+        for (int j = 0; j < 4; j++)
         {
-            _field.SetFieldBlockEnable(_posX, _posY, true);
+            int px = _posX + _currentShapeData[j, 0];
+            int py = _posY + _currentShapeData[j, 1];
+
+            if (_field.CheckLanding(px, py))
+            {
+                landing = true;
+                break;
+            }
+        }
+
+        if (landing)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                int px = _posX + _currentShapeData[j, 0];
+                int py = _posY + _currentShapeData[j, 1];
+
+                _field.SetFieldBlockEnable(px, py, true);
+            }
 
             for (int i = 0; i < Field.HEIGHT; i++)
             {
@@ -316,12 +343,12 @@ public class Mino : MonoBehaviour
 
             PositionInit();
             PositionUpdate();
-
-            return;
         }
-
-        _posY -= 1;
-        PositionUpdate();
+        else
+        {
+            _posY -= 1;
+            PositionUpdate();
+        }
     }
 
     /// <summary>
