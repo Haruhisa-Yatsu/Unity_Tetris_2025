@@ -50,6 +50,27 @@ public class Field : MonoBehaviour
     /// <returns></returns>
     public bool CheckFieldBlockEnable(int x, int y)
     {
+        if (y < 0)
+        {
+            return true;
+        }
+
+        if (y >= HEIGHT)
+        {
+            return false;
+        }
+        
+        if (x < 0)
+        {
+            return true;
+        }
+
+        if (x >= WIDTH)
+        {
+            return true;
+        }
+
+
         return _fieldBlockArray[x, y].GetEnable();
     }
 
@@ -64,6 +85,11 @@ public class Field : MonoBehaviour
         if (y <= 0)
         {
             return true;
+        }
+
+        if(y >= HEIGHT)
+        {
+            return false;
         }
 
         return CheckFieldBlockEnable(x, y - 1);

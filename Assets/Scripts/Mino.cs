@@ -158,15 +158,32 @@ public class Mino : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _currentShapeData = ShapeRotate(_currentShapeData,
-                RotateAngle._270);
-            BlockRootUpdate();
+            var tempShape = ShapeRotate(_currentShapeData, RotateAngle._270);
+
+            bool overlap = false;
+
+            for (int j = 0; j < 4; j++)
+            {
+                int px = _posX + tempShape[j, 0];
+                int py = _posY + tempShape[j, 1];
+
+                if (_field.CheckFieldBlockEnable(px, py))
+                {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (!overlap)
+            {
+                _currentShapeData = tempShape;
+                BlockRootUpdate();
+            }
         }
         
         if (Input.GetKeyDown(KeyCode.A))
         {
-            _currentShapeData = ShapeRotate(_currentShapeData,
-                RotateAngle._90);
+            _currentShapeData = ShapeRotate(_currentShapeData,RotateAngle._90);
             BlockRootUpdate();
         }
 
@@ -304,11 +321,6 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void Fall()
     {
-        if (CheckBlock(_posX, _posY - 1))
-        {
-            return;
-        }
-
         bool landing = false;
 
         for (int j = 0; j < 4; j++)
@@ -335,9 +347,9 @@ public class Mino : MonoBehaviour
 
             for (int i = 0; i < Field.HEIGHT; i++)
             {
-                if (_field.CheckLine(i))
+                if (_field.CheckLine(Field.HEIGHT - i - 1))
                 {
-                    _field.EraceLine(i);
+                    _field.EraceLine(Field.HEIGHT - i - 1);
                 }
             }
 
@@ -356,9 +368,15 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void Right()
     {
-        if (CheckBlock(_posX + 1, _posY))
+        for (int j = 0; j < 4; j++)
         {
-            return;
+            int px = _posX + _currentShapeData[j, 0];
+            int py = _posY + _currentShapeData[j, 1];
+
+            if (CheckBlock(px + 1, py))
+            {
+                return;
+            }
         }
 
         _posX += 1;
@@ -370,9 +388,15 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void Left()
     {
-        if (CheckBlock(_posX - 1, _posY))
+        for (int j = 0; j < 4; j++)
         {
-            return;
+            int px = _posX + _currentShapeData[j, 0];
+            int py = _posY + _currentShapeData[j, 1];
+
+            if (CheckBlock(px - 1, py))
+            {
+                return;
+            }
         }
 
         _posX -= 1;
@@ -393,6 +417,11 @@ public class Mino : MonoBehaviour
 
         // ‰E•Ç‚Ì”»’è
         if (x >= Field.WIDTH)
+        {
+            return true;
+        }
+
+        if (_field.CheckFieldBlockEnable(x, y))
         {
             return true;
         }
