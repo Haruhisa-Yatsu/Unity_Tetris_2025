@@ -158,8 +158,10 @@ public class Mino : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            // 回転後のシェイプデータを保管する
             var tempShape = ShapeRotate(_currentShapeData, RotateAngle._270);
 
+            // 回転した結果既存のブロックと重なるかどうか
             bool overlap = false;
 
             for (int j = 0; j < 4; j++)
@@ -174,6 +176,7 @@ public class Mino : MonoBehaviour
                 }
             }
 
+            // 重なっていなかったら反映
             if (!overlap)
             {
                 _currentShapeData = tempShape;
@@ -183,8 +186,30 @@ public class Mino : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.A))
         {
-            _currentShapeData = ShapeRotate(_currentShapeData,RotateAngle._90);
-            BlockRootUpdate();
+            // 回転後のシェイプデータを保管する
+            var tempShape = ShapeRotate(_currentShapeData, RotateAngle._90);
+
+            // 回転した結果既存のブロックと重なるかどうか
+            bool overlap = false;
+
+            for (int j = 0; j < 4; j++)
+            {
+                int px = _posX + tempShape[j, 0];
+                int py = _posY + tempShape[j, 1];
+
+                if (_field.CheckFieldBlockEnable(px, py))
+                {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            // 重なっていなかったら反映
+            if (!overlap)
+            {
+                _currentShapeData = tempShape;
+                BlockRootUpdate();
+            }
         }
 
 
@@ -384,7 +409,7 @@ public class Mino : MonoBehaviour
     }
 
     /// <summary>
-    /// 右移動
+    /// 左移動
     /// </summary>
     private void Left()
     {
