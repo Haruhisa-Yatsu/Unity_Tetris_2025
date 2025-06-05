@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Mino : MonoBehaviour
 {
@@ -366,7 +367,7 @@ public class Mino : MonoBehaviour
 
                 if (_field.CheckGameOver(py))
                 {
-                    Debug.Log("ゲームオーバーです");
+                    SceneManager.LoadScene("Title");
                     return;
                 }
 
