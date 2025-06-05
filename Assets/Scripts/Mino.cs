@@ -125,6 +125,11 @@ public class Mino : MonoBehaviour
     /// <summary>
     /// 現在のミノの形
     /// </summary>
+    private MinoType _currentMinoType;
+
+    /// <summary>
+    /// 現在のミノの形のデータ
+    /// </summary>
     private int[,] _currentShapeData;
 
     /// <summary>
@@ -158,58 +163,12 @@ public class Mino : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // 回転後のシェイプデータを保管する
-            var tempShape = ShapeRotate(_currentShapeData, RotateAngle._270);
-
-            // 回転した結果既存のブロックと重なるかどうか
-            bool overlap = false;
-
-            for (int j = 0; j < 4; j++)
-            {
-                int px = _posX + tempShape[j, 0];
-                int py = _posY + tempShape[j, 1];
-
-                if (_field.CheckFieldBlockEnable(px, py))
-                {
-                    overlap = true;
-                    break;
-                }
-            }
-
-            // 重なっていなかったら反映
-            if (!overlap)
-            {
-                _currentShapeData = tempShape;
-                BlockRootUpdate();
-            }
+            Rotate(RotateAngle._270);
         }
-        
+
         if (Input.GetKeyDown(KeyCode.A))
         {
-            // 回転後のシェイプデータを保管する
-            var tempShape = ShapeRotate(_currentShapeData, RotateAngle._90);
-
-            // 回転した結果既存のブロックと重なるかどうか
-            bool overlap = false;
-
-            for (int j = 0; j < 4; j++)
-            {
-                int px = _posX + tempShape[j, 0];
-                int py = _posY + tempShape[j, 1];
-
-                if (_field.CheckFieldBlockEnable(px, py))
-                {
-                    overlap = true;
-                    break;
-                }
-            }
-
-            // 重なっていなかったら反映
-            if (!overlap)
-            {
-                _currentShapeData = tempShape;
-                BlockRootUpdate();
-            }
+            Rotate(RotateAngle._90);
         }
 
 
@@ -232,6 +191,43 @@ public class Mino : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// 回転処理
+    /// </summary>
+    /// <param name="angle"></param>
+    private void Rotate(RotateAngle angle)
+    {
+        // Oミノは回転させない
+        if(_currentMinoType == MinoType.O)
+        {
+            return;
+        }
+
+        // 回転後のシェイプデータを保管する
+        var tempShape = ShapeRotate(_currentShapeData, angle);
+
+        // 回転した結果既存のブロックと重なるかどうか
+        bool overlap = false;
+
+        for (int j = 0; j < 4; j++)
+        {
+            int px = _posX + tempShape[j, 0];
+            int py = _posY + tempShape[j, 1];
+
+            if (_field.CheckFieldBlockEnable(px, py))
+            {
+                overlap = true;
+                break;
+            }
+        }
+
+        // 重なっていなかったら反映
+        if (!overlap)
+        {
+            _currentShapeData = tempShape;
+            BlockRootUpdate();
+        }
+    }
 
     /// <summary>
     /// Fieldの参照をセットする
@@ -247,7 +243,8 @@ public class Mino : MonoBehaviour
     /// </summary>
     private void PositionInit()
     {
-        _currentShapeData = GetShape((MinoType)Random.Range(0, (int)MinoType.MAX));
+        _currentMinoType = (MinoType)Random.Range(0, (int)MinoType.MAX);
+        _currentShapeData = GetShape(_currentMinoType);
 
         BlockRootUpdate();
 
