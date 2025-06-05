@@ -75,6 +75,16 @@ public class Field : MonoBehaviour
     }
 
     /// <summary>
+    /// ゲームオーバー確認関数
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public bool CheckGameOver(int y)
+    {
+        return y >= HEIGHT;
+    }
+
+    /// <summary>
     /// ブロックの着地確認処理
     /// </summary>
     /// <param name="x"></param>

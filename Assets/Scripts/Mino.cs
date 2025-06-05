@@ -364,6 +364,12 @@ public class Mino : MonoBehaviour
                 int px = _posX + _currentShapeData[j, 0];
                 int py = _posY + _currentShapeData[j, 1];
 
+                if (_field.CheckGameOver(py))
+                {
+                    Debug.Log("ゲームオーバーです");
+                    return;
+                }
+
                 _field.SetFieldBlockEnable(px, py, true);
             }
 
@@ -374,6 +380,8 @@ public class Mino : MonoBehaviour
                     _field.EraceLine(Field.HEIGHT - i - 1);
                 }
             }
+
+
 
             PositionInit();
             PositionUpdate();
